@@ -3,185 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon EcoleDirecte - Redesign</title>
+    <title>EcoleDirecte Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #007bff;
-            --bg-color: #f4f7f6;
-            --sidebar-color: #ffffff;
-            --text-dark: #333;
-            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --primary: #0062ff;
+            --bg: #f8f9fc;
+            --sidebar: #ffffff;
+            --text: #333;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background: var(--bg); }
 
-        /* --- Barre Latérale --- */
-        nav {
-            width: 250px;
-            height: 100vh;
-            background: var(--sidebar-color);
-            border-right: 1px solid #ddd;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-        }
+        /* Sidebar */
+        nav { width: 260px; height: 100vh; background: var(--sidebar); border-right: 1px solid #e3e6f0; position: fixed; display: flex; flex-direction: column; }
+        .logo { padding: 25px; font-weight: bold; color: var(--primary); font-size: 1.2rem; border-bottom: 1px solid #eee; }
+        .menu { list-style: none; padding: 0; flex-grow: 1; }
+        .menu li { padding: 15px 25px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; }
+        .menu li:hover, .menu li.active { background: #f0f7ff; color: var(--primary); border-left: 5px solid var(--primary); }
+        .menu i { margin-right: 12px; }
 
-        .logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
+        /* Bouton Admin en bas */
+        .admin-btn { padding: 15px 25px; background: #333; color: white; cursor: pointer; text-align: center; font-size: 0.8rem; }
 
-        .menu-items {
-            list-style: none;
-            padding: 20px 0;
-            margin: 0;
-        }
+        /* Contenu */
+        main { margin-left: 260px; padding: 40px; width: 100%; }
+        .page { display: none; }
+        .page.active { display: block; }
 
-        .menu-items li {
-            padding: 15px 25px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-items li:hover {
-            background-color: #e9ecef;
-            color: var(--primary-color);
-        }
-
-        .menu-items i {
-            margin-right: 15px;
-            width: 20px;
-        }
-
-        /* --- Contenu Principal --- */
-        main {
-            margin-left: 250px;
-            padding: 30px;
-            width: calc(100% - 250px);
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* --- Grille de Modules --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
-
-        .note-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px thin #eee;
-        }
-
-        .badge {
-            background: #28a745;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
+        /* Grille Emploi du Temps */
+        .grid-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .timetable { display: grid; grid-template-columns: 80px repeat(5, 1fr); gap: 10px; margin-top: 20px; }
+        .header-day { font-weight: bold; text-align: center; background: #eee; padding: 10px; border-radius: 5px; }
+        .cell { background: #fdfdfd; border: 1px solid #eee; padding: 15px; border-radius: 5px; min-height: 60px; position: relative; }
+        
+        /* Style quand on modifie (Admin) */
+        .editable:focus { outline: 2px solid var(--primary); background: #fff; }
+        .admin-badge { display: none; background: #ff3e3e; color: white; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; margin-left: 10px; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">ECOLE DIRECTE <small>2.0</small></div>
-        <ul class="menu-items">
-            <li><i class="fas fa-home"></i> Accueil</li>
-            <li><i class="fas fa-calendar-alt"></i> Emploi du temps</li>
-            <li><i class="fas fa-graduation-cap"></i> Notes</li>
-            <li><i class="fas fa-book"></i> Cahier de textes</li>
-            <li><i class="fas fa-envelope"></i> Messagerie</li>
+        <div class="logo"><i class="fas fa-school"></i> ECOLE DIRECTE</div>
+        <ul class="menu">
+            <li onclick="showPage('home')" id="m-home" class="active"><i class="fas fa-home"></i> Accueil</li>
+            <li onclick="showPage('edt')" id="m-edt"><i class="fas fa-calendar-alt"></i> Emploi du temps</li>
         </ul>
+        <div class="admin-btn" onclick="loginAdmin()">Mode Administration <span id="lock-icon"><i class="fas fa-lock"></i></span></div>
     </nav>
 
     <main>
-        <header>
-            <h1>Tableau de bord</h1>
-            <div class="user-profile">
-                <span>Ian Schots - Seconde A</span>
-                <img src="https://via.placeholder.com/40" alt="Avatar" style="border-radius: 50%;">
-            </div>
-        </header>
+        <div id="home" class="page active">
+            <h1>Bienvenue, Élève <span id="admin-indicator" class="admin-badge">MODE ADMIN ACTIF</span></h1>
+            <p>Consultez vos informations scolaires ici.</p>
+        </div>
 
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3><i class="fas fa-star"></i> Dernières Notes</h3>
-                <div class="note-item">
-                    <span>Mathématiques</span>
-                    <span class="badge">16/20</span>
-                </div>
-                <div class="note-item">
-                    <span>Histoire-Géo</span>
-                    <span class="badge">14.5/20</span>
-                </div>
-                <div class="note-item">
-                    <span>Physique-Chimie</span>
-                    <span class="badge" style="background:#dc3545">08/20</span>
+        <div id="edt" class="page">
+            <h1>Emploi du temps de la semaine</h1>
+            <div class="grid-container">
+                <div class="timetable">
+                    <div></div>
+                    <div class="header-day">LUN</div><div class="header-day">MAR</div><div class="header-day">MER</div><div class="header-day">JEU</div><div class="header-day">VEN</div>
+                    
+                    <div style="font-weight:bold; padding-top:15px">08:00</div>
+                    <div class="cell" contenteditable="false">Maths (S.201)</div>
+                    <div class="cell" contenteditable="false">Français (S.102)</div>
+                    <div class="cell" contenteditable="false">Anglais (S.003)</div>
+                    <div class="cell" contenteditable="false">Histoire (S.204)</div>
+                    <div class="cell" contenteditable="false">Physique (S.Labo)</div>
                 </div>
             </div>
-
-            <div class="card">
-                <h3><i class="fas fa-clock"></i> Prochain cours</h3>
-                <p><strong>11:20 - Anglais</strong></p>
-                <p>Salle C3 - Mme. Bulot</p>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-edit"></i> Travail à faire</h3>
-                <ul>
-                    <li>Diaporama a faire en Français</li>
-                    <li>Travail à rendre en Anglais</li>
-                </ul>
-            </div>
+            <p id="admin-msg" style="display:none; color: green; margin-top: 10px;"><b>Note :</b> En tant qu'admin, cliquez sur un cours pour modifier son texte.</p>
         </div>
     </main>
 
+    <script>
+        let isAdmin = false;
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.menu li').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('m-' + id).classList.add('active');
+        }
+
+        function loginAdmin() {
+            if (isAdmin) {
+                alert("Vous êtes déjà administrateur.");
+                return;
+            }
+
+            let password = prompt("Entrez le mot de passe administrateur :");
+            
+            if (password === "28@Out2008") { // <-- TON MOT DE PASSE
+                isAdmin = true;
+                alert("Accès autorisé !");
+                
+                // Activer l'édition sur les cellules
+                document.querySelectorAll('.cell').forEach(cell => {
+                    cell.setAttribute('contenteditable', 'true');
+                    cell.style.borderColor = "#0062ff";
+                });
+
+                document.getElementById('admin-indicator').style.display = "inline";
+                document.getElementById('admin-msg').style.display = "block";
+                document.getElementById('lock-icon').innerHTML = '<i class="fas fa-lock-open"></i>';
+            } else {
+                alert("Mot de passe incorrect !");
+            }
+        }
+    </script>
 </body>
 </html>
