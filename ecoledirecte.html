@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoleDirecte - Interface Administrative</title>
+    <title>EcoleDirecte - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -13,91 +13,78 @@
             --sidebar: #ffffff;
         }
 
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; display: flex; background: var(--bg); overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background: var(--bg); }
 
-        /* --- Sidebar --- */
-        nav { width: 260px; height: 100vh; background: var(--sidebar); border-right: 1px solid #ddd; position: fixed; display: flex; flex-direction: column; transition: 0.3s; }
+        /* Sidebar */
+        nav { width: 260px; height: 100vh; background: var(--sidebar); border-right: 1px solid #ddd; position: fixed; display: flex; flex-direction: column; z-index: 100; }
         .logo { padding: 25px; font-weight: 800; color: var(--primary); border-bottom: 2px solid var(--bg); }
+        
         .menu { list-style: none; padding: 0; flex-grow: 1; }
-        .menu li { padding: 15px 25px; cursor: pointer; color: #636e72; display: flex; align-items: center; font-weight: 500; }
+        .menu li { padding: 15px 25px; cursor: pointer; color: #636e72; display: flex; align-items: center; transition: 0.2s; }
         .menu li:hover { background: #f8f9fa; color: var(--primary); }
         .menu li.active { background: #edf2ff; color: var(--primary); border-right: 4px solid var(--primary); }
         .menu i { margin-right: 12px; width: 20px; }
 
-        /* --- Barre Admin Invisible par défaut --- */
+        /* Barre Admin */
         #admin-toolbar {
-            display: none; /* CACHÉ */
-            position: fixed;
-            top: 0;
-            left: 260px;
-            right: 0;
-            background: var(--admin-red);
-            color: white;
-            padding: 10px 30px;
-            z-index: 1000;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: none; 
+            position: fixed; top: 0; left: 260px; right: 0;
+            background: var(--admin-red); color: white; padding: 15px 30px;
+            z-index: 200; justify-content: space-between; align-items: center;
         }
 
-        /* --- Contenu --- */
-        main { margin-left: 260px; padding: 30px; width: 100%; transition: 0.3s; }
-        .admin-mode-active main { padding-top: 70px; } /* Espace pour la barre admin */
+        /* Contenu */
+        main { margin-left: 260px; padding: 30px; width: 100%; }
+        .admin-mode-active main { padding-top: 80px; }
 
         .grid-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        
-        /* --- Grille EDT --- */
         .timetable { display: grid; grid-template-columns: 130px repeat(5, 1fr); gap: 10px; }
-        .day-header { background: #2d3436; color: white; text-align: center; padding: 12px; border-radius: 6px; font-weight: bold; }
+        .day-header { background: #2d3436; color: white; text-align: center; padding: 12px; border-radius: 6px; }
         .time-slot { background: #dfe6e9; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; border-radius: 6px; }
         
         .cell { 
             background: #ffffff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 6px; 
-            min-height: 50px; text-align: center; display: flex; flex-direction: column; justify-content: center;
-            transition: 0.2s;
+            min-height: 50px; text-align: center; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Styles Spéciaux Pause */
         .break { grid-column: span 5; background: #f8f9fa; color: #b2bec3; font-style: italic; border: 1px dashed #ccc; }
 
-        /* Mode Edition */
-        .admin-mode-active .cell:not(.break) { 
-            border: 1px solid var(--admin-red);
-            background: #fff5f5;
-            cursor: text;
-        }
-        .admin-mode-active .cell:not(.break):focus { outline: 2px solid var(--admin-red); background: white; }
+        /* Etat Admin */
+        .admin-mode-active .cell:not(.break) { border: 1px solid var(--admin-red); background: #fff5f5; }
 
         .btn-save { background: white; color: var(--admin-red); border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
         .btn-logout { background: transparent; color: white; border: 1px solid white; padding: 5px 10px; cursor: pointer; margin-left: 10px; }
+        
+        /* Bouton Admin en bas du menu */
+        .admin-trigger { padding: 15px 25px; color: #ccc; cursor: pointer; font-size: 0.8rem; border-top: 1px solid #eee; }
+        .admin-trigger:hover { color: var(--admin-red); }
     </style>
 </head>
 <body id="app-body">
 
     <div id="admin-toolbar">
-        <div><i class="fas fa-user-shield"></i> <strong>PANNEAU ADMINISTRATEUR</strong> - Modification autorisée</div>
+        <div><i class="fas fa-user-shield"></i> <strong>MODE ADMINISTRATEUR</strong></div>
         <div>
-            <button class="btn-save" onclick="saveData()"><i class="fas fa-save"></i> Enregistrer</button>
-            <button class="btn-logout" onclick="logout()">Déconnexion</button>
+            <button class="btn-save" onclick="saveData()">Enregistrer</button>
+            <button class="btn-logout" onclick="logout()">Quitter</button>
         </div>
     </div>
 
     <nav>
-        <div class="logo"><i class="fas fa-graduation-cap"></i> ECOLE DIRECTE</div>
+        <div class="logo">ECOLE DIRECTE</div>
         <ul class="menu">
-            <li><i class="fas fa-home"></i> Accueil</li>
             <li class="active"><i class="fas fa-calendar-alt"></i> Emploi du temps</li>
-            <li><i class="fas fa-book"></i> Cahier de textes</li>
             <li><i class="fas fa-poll"></i> Notes</li>
         </ul>
-        <div style="padding: 20px; font-size: 10px; color: #ccc; cursor: pointer;" onclick="askAdmin()">Accès réservé</div>
+        <div class="admin-trigger" onclick="askAdmin()">
+            <i class="fas fa-lock"></i> Accès réservé
+        </div>
     </nav>
 
     <main>
-        <h1 id="page-title">Emploi du temps - Seconde A</h1>
-
+        <h1>Emploi du temps - 3ème A</h1>
         <div class="grid-container">
-            <div class="timetable">
+            <div class="timetable" id="timetable">
                 <div></div>
                 <div class="day-header">LUNDI</div><div class="day-header">MARDI</div><div class="day-header">MERCREDI</div><div class="day-header">JEUDI</div><div class="day-header">VENDREDI</div>
 
@@ -107,78 +94,50 @@
                 <div class="time-slot">09h50 - 10h50</div>
                 <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
 
-                <div class="time-slot">11h20 - 12h15</div>
-                <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
-
-                <div class="time-slot">12h15 - 13h10</div>
-                <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
-
                 <div class="time-slot">Pause</div>
-                <div class="cell break">DÉJEUNER</div>
+                <div class="cell break">RÉCRÉATION</div>
 
-                <div class="time-slot">14h05 - 15h00</div>
-                <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
-
-                <div class="time-slot">Récré</div>
-                <div class="cell break">PAUSE</div>
-
-                <div class="time-slot">15h15 - 16h10</div>
-                <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
-
-                <div class="time-slot">16h10 - 17h05</div>
+                <div class="time-slot">11h20 - 12h15</div>
                 <div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div><div class="cell">Matière</div>
             </div>
         </div>
     </main>
 
     <script>
-        const pass = "28@Out2008";
+        const pass = "admin";
 
-// 1. CHARGEMENT : Dès que la page s'affiche, on récupère les données sauvegardées
-window.onload = function() {
-    const savedData = localStorage.getItem('monEmploiDuTemps');
-    if (savedData) {
-        const courses = JSON.parse(savedData);
-        const cells = document.querySelectorAll('.cell:not(.break)');
-        cells.forEach((cell, index) => {
-            if (courses[index]) cell.innerText = courses[index];
+        // Chargement automatique
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('edt_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const cells = document.querySelectorAll('.cell:not(.break)');
+                cells.forEach((cell, i) => { if(data[i]) cell.innerText = data[i]; });
+            }
         });
-    }
-};
 
-function askAdmin() {
-    let entry = prompt("Entrez le code secret Administrateur :");
-    if (entry === pass) {
-        activateAdmin();
-    } else {
-        alert("Accès refusé.");
-    }
-}
+        function askAdmin() {
+            console.log("Clic détecté !"); // Pour vérifier dans la console
+            let entry = prompt("Code Administrateur :");
+            if (entry === pass) {
+                document.getElementById('app-body').classList.add('admin-mode-active');
+                document.getElementById('admin-toolbar').style.display = 'flex';
+                document.querySelectorAll('.cell:not(.break)').forEach(c => c.contentEditable = "true");
+            } else {
+                alert("Erreur de code.");
+            }
+        }
 
-function activateAdmin() {
-    document.getElementById('app-body').classList.add('admin-mode-active');
-    document.getElementById('admin-toolbar').style.display = 'flex';
-    document.querySelectorAll('.cell:not(.break)').forEach(cell => {
-        cell.contentEditable = "true";
-    });
-}
+        function saveData() {
+            const data = [];
+            document.querySelectorAll('.cell:not(.break)').forEach(c => data.push(c.innerText));
+            localStorage.setItem('edt_data', JSON.stringify(data));
+            alert("Sauvegardé localement !");
+        }
 
-// 2. SAUVEGARDE : On enregistre le texte de chaque case dans le navigateur
-function saveData() {
-    const cells = document.querySelectorAll('.cell:not(.break)');
-    const coursesData = [];
-    
-    cells.forEach(cell => {
-        coursesData.push(cell.innerText);
-    });
-
-    localStorage.setItem('monEmploiDuTemps', JSON.stringify(coursesData));
-    alert("✅ Succès ! L'emploi du temps est sauvegardé sur cet ordinateur.");
-}
-
-function logout() {
-    // On retire juste le mode edition sans rafraichir pour ne pas perdre le visuel
-    document.getElementById('app-body').classList.remove('admin-mode-active');
-    document.getElementById('admin-toolbar').style.display = 'none';
-    document.querySelectorAll('.cell').forEach(cell => cell.contentEditable = "false");
-}
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
