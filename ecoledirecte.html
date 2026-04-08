@@ -132,34 +132,53 @@
     </main>
 
     <script>
-        const pass = "28@Out2008"; // Ton mot de passe
+        const pass = "28@Out2008";
 
-        function askAdmin() {
-            let entry = prompt("Entrez le code secret Administrateur :");
-            if (entry === pass) {
-                activateAdmin();
-            } else {
-                alert("Accès refusé. Cette zone est réservée au personnel de l'établissement.");
-            }
-        }
+// 1. CHARGEMENT : Dès que la page s'affiche, on récupère les données sauvegardées
+window.onload = function() {
+    const savedData = localStorage.getItem('monEmploiDuTemps');
+    if (savedData) {
+        const courses = JSON.parse(savedData);
+        const cells = document.querySelectorAll('.cell:not(.break)');
+        cells.forEach((cell, index) => {
+            if (courses[index]) cell.innerText = courses[index];
+        });
+    }
+};
 
-        function activateAdmin() {
-            document.getElementById('app-body').classList.add('admin-mode-active');
-            document.getElementById('admin-toolbar').style.display = 'flex';
-            document.querySelectorAll('.cell:not(.break)').forEach(cell => {
-                cell.contentEditable = "true";
-            });
-            document.getElementById('page-title').innerText = "🔧 Configuration de l'Emploi du Temps";
-        }
+function askAdmin() {
+    let entry = prompt("Entrez le code secret Administrateur :");
+    if (entry === pass) {
+        activateAdmin();
+    } else {
+        alert("Accès refusé.");
+    }
+}
 
-        function logout() {
-            location.reload(); // Rafraîchit la page pour tout verrouiller
-        }
+function activateAdmin() {
+    document.getElementById('app-body').classList.add('admin-mode-active');
+    document.getElementById('admin-toolbar').style.display = 'flex';
+    document.querySelectorAll('.cell:not(.break)').forEach(cell => {
+        cell.contentEditable = "true";
+    });
+}
 
-        function saveData() {
-            alert("✅ Modifications enregistrées avec succès dans le système !");
-            // Ici, on pourrait ajouter du code pour sauvegarder dans une base de données
-        }
-    </script>
-</body>
-</html>
+// 2. SAUVEGARDE : On enregistre le texte de chaque case dans le navigateur
+function saveData() {
+    const cells = document.querySelectorAll('.cell:not(.break)');
+    const coursesData = [];
+    
+    cells.forEach(cell => {
+        coursesData.push(cell.innerText);
+    });
+
+    localStorage.setItem('monEmploiDuTemps', JSON.stringify(coursesData));
+    alert("✅ Succès ! L'emploi du temps est sauvegardé sur cet ordinateur.");
+}
+
+function logout() {
+    // On retire juste le mode edition sans rafraichir pour ne pas perdre le visuel
+    document.getElementById('app-body').classList.remove('admin-mode-active');
+    document.getElementById('admin-toolbar').style.display = 'none';
+    document.querySelectorAll('.cell').forEach(cell => cell.contentEditable = "false");
+}
