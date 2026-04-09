@@ -78,10 +78,37 @@
     </main>
 
     <main id="page-notes" class="page-content">
-        <h1>Mes notes</h1>
-        <div class="card">Aucune note pour le moment.</div>
-    </main>
-
+    <h1>Mes notes</h1>
+    <div class="card">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; color: var(--text); border-bottom: 2px solid var(--border);">
+                    <th style="padding: 15px;">Matière</th>
+                    <th style="padding: 15px;">Note</th>
+                    <th style="padding: 15px;">Coefficient</th>
+                    <th style="padding: 15px;">Date</th>
+                </tr>
+            </thead>
+            <tbody id="notes-list">
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 15px; font-weight: 600;">Mathématiques</td>
+                    <td style="padding: 15px;"><span style="background: #eef4ff; color: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold;">15.5/20</span></td>
+                    <td style="padding: 15px;">2</td>
+                    <td style="padding: 15px; color: var(--text);">09/04/2026</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr style="background: #f8fafc; font-weight: bold;">
+                    <td style="padding: 15px;">MOYENNE GÉNÉRALE</td>
+                    <td style="padding: 15px; color: var(--primary); font-size: 1.2rem;" id="moyenne-gen">15.50</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>
+    
     <main id="page-messagerie" class="page-content">
         <h1>Messagerie</h1>
         <div class="card">Votre boîte de réception est vide.</div>
