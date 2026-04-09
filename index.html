@@ -44,16 +44,17 @@
 <body>
 
     <div id="auth-screen">
-    <div class="auth-card">
-        <h2 style="color:var(--primary)">EcoleDirecte</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Mot de passe">
-        <button class="btn-auth" id="btn-auth" onclick="handleAuth()">Se connecter</button>
-        <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px; cursor: pointer;" onclick="toggleAuth()">
-            Pas de compte ? <span style="color:var(--primary); font-weight:bold;">S'inscrire ici</span>
-        </p>
+        <div class="auth-card">
+            <h2 style="color:var(--primary)">EcoleDirecte</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Mot de passe">
+            <button class="btn-auth" id="btn-auth" onclick="handleAuth()">Se connecter</button>
+            
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px; cursor: pointer;" onclick="toggleAuth()">
+                Pas de compte ? <span style="color:var(--primary); font-weight:bold;">S'inscrire ici</span>
+            </p>
+        </div>
     </div>
-</div>
 
     <nav id="sidebar" style="display: none;">
         <div class="logo">ECOLE<b>DIRECTE</b></div>
