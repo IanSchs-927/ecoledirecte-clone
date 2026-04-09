@@ -80,6 +80,12 @@
     <main id="page-notes" class="page-content">
     <h1>Mes notes</h1>
     <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <p style="color: var(--text);">Consultez vos derniers résultats scolaires.</p>
+    <button onclick="ouvrirFormulaireNote()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        <i class="fa-solid fa-plus"></i> Ajouter une note
+    </button>
+</div>
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="text-align: left; color: var(--text); border-bottom: 2px solid var(--border);">
@@ -117,17 +123,64 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } 
-        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+            window.ouvrirFormulaireNote = () => {
+    const matiere = prompt("Quelle matière ? (ex: Français)");
+    const note = parseFloat(prompt("Quelle note ? (sur 20)"));
+    const coef = parseFloat(prompt("Quel coefficient ?"));
 
+    if (matiere && !isNaN(note) && !isNaN(coef)) {
+        ajouterNoteTableau(matiere, note, coef);
+    }
+};
+
+function ajouterNoteTableau(matiere, note, coef) {
+    const tbody = document.getElementById('notes-list');
+    const date = new Date().toLocaleDateString();
+    
+    const row = document.createElement('tr');
+    row.style.borderBottom = "1px solid var(--border)";
+    row.innerHTML = `
+        <td style="padding: 15px; font-weight: 600;">${matiere}</td>
+        <td style="padding: 15px;"><span style="background: #eef4ff; color: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold;">${note}/20</span></td>
+        <td style="padding: 15px;">${coef}</td>
+        <td style="padding: 15px; color: var(--text);">${date}</td>
+    `;
+    
+    tbody.appendChild(row);
+    calculerMoyenne();
+}
+
+function calculerMoyenne() {
+    const tbody = document.getElementById('notes-list');
+    const rows = tbody.querySelectorAll('tr');
+    let totalPoints = 0;
+    let totalCoef = 0;
+
+    rows.forEach(row => {
+        const noteStr = row.cells[1].innerText.split('/')[0];
+        const coefStr = row.cells[2].innerText;
+        
+        const note = parseFloat(noteStr);
+        const coef = parseFloat(coefStr);
+        
+        totalPoints += (note * coef);
+        totalCoef += coef;
+    });
+
+    const moyenne = totalPoints / totalCoef;
+    document.getElementById('moyenne-gen').innerText = moyenne.toFixed(2);
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+}
         const firebaseConfig = {
             apiKey: "AIzaSyBVZwN2vznc3sU8frQosos4vVEgqBmrJjM",
             authDomain: "monecoledirecte.firebaseapp.com",
-            projectId: "monecoledirecte",
+            projetId: "monecoledirecte",
             storageBucket: "monecoledirecte.firebasestorage.app",
             messagingSenderId: "543788775430",
-            appId: "1:543788775430:web:4860b7498c460f78953110"
+            appId: "1:543788775430:web:4860b7498c460f78953110",
+            measurementId: "G-9QNVV0K2G9"
         };
-
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
