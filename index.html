@@ -9,48 +9,32 @@
     <style>
         :root { --primary: #0062ff; --bg: #f8fafc; --border: #e2e8f0; --text: #64748b; }
         body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
-
-        /* --- AUTH SCREEN --- */
         #auth-screen { position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .auth-card { width: 350px; padding: 40px; border: 1px solid var(--border); border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 10px; box-sizing: border-box; }
-        .btn-auth { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
-
-        /* --- SIDEBAR --- */
-        nav { width: 260px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; height: 100vh; }
+        .btn-auth { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        nav { width: 260px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         .logo { padding: 30px; font-weight: 800; color: var(--primary); font-size: 1.2rem; }
         .menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
-        .menu li { 
-            padding: 12px 25px; margin: 5px 15px; border-radius: 10px; 
-            cursor: pointer; color: var(--text); font-weight: 500; 
-            display: flex; align-items: center; transition: 0.2s;
-        }
-        .menu li i { margin-right: 15px; width: 20px; text-align: center; font-size: 1.1rem; }
-        .menu li.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0, 98, 255, 0.2); }
-        .menu li:hover:not(.active) { background: #f1f5f9; color: var(--primary); }
-
-        /* --- CONTENT MANAGEMENT --- */
+        .menu li { padding: 12px 25px; margin: 5px 15px; border-radius: 10px; cursor: pointer; color: var(--text); font-weight: 500; display: flex; align-items: center; }
+        .menu li i { margin-right: 15px; width: 20px; text-align: center; }
+        .menu li.active { background: var(--primary); color: white; }
         main { flex-grow: 1; padding: 40px; overflow-y: auto; display: none; }
-        .app-active main { display: none; } /* On cache tout par défaut */
-        main.active-page { display: block; } /* On affiche la page active */
-        
-        h1 { font-size: 1.8rem; color: #1e293b; margin-bottom: 25px; }
-
-        /* --- UI ELEMENTS --- */
-        .card { background: white; padding: 25px; border-radius: 15px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        #user-mail { font-size: 0.75rem; padding: 20px; color: #94a3b8; border-top: 1px solid #f1f5f9; }
+        .active-page { display: block !important; }
+        .card { background: white; padding: 25px; border-radius: 15px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; border-bottom: 1px solid var(--border); text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h2 style="color:var(--primary)">EcoleDirecte</h2>
+            <h2 id="auth-title" style="color:var(--primary)">Connexion</h2>
             <input type="email" id="email" placeholder="Email">
             <input type="password" id="password" placeholder="Mot de passe">
             <button class="btn-auth" id="btn-auth" onclick="handleAuth()">Se connecter</button>
-            
-            <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px; cursor: pointer;" onclick="toggleAuth()">
+            <p id="toggle-p" style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px; cursor: pointer;" onclick="window.toggleAuth()">
                 Pas de compte ? <span style="color:var(--primary); font-weight:bold;">S'inscrire ici</span>
             </p>
         </div>
@@ -59,179 +43,96 @@
     <nav id="sidebar" style="display: none;">
         <div class="logo">ECOLE<b>DIRECTE</b></div>
         <ul class="menu">
-            <li onclick="showPage('page-accueil', this)"><i class="fa-solid fa-table-cells-large"></i> Accueil</li>
             <li onclick="showPage('page-edt', this)" class="active"><i class="fa-solid fa-calendar-days"></i> Emploi du temps</li>
             <li onclick="showPage('page-notes', this)"><i class="fa-solid fa-graduation-cap"></i> Mes notes</li>
-            <li onclick="showPage('page-messagerie', this)"><i class="fa-solid fa-envelope"></i> Messagerie</li>
         </ul>
-        <div id="user-mail"></div>
-        <button onclick="signOutUser()" style="margin: 15px; background: none; border: none; color: #ff4757; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Déconnexion</button>
+        <button onclick="window.signOutUser()" style="margin: 20px; background: none; border: none; color: #ff4757; cursor: pointer;">Déconnexion</button>
     </nav>
 
-    <main id="page-accueil" class="page-content">
-        <h1>Accueil</h1>
-        <div class="card">Bienvenue sur votre espace personnel.</div>
-    </main>
-
-    <main id="page-edt" class="page-content active-page">
+    <main id="page-edt" class="active-page">
         <h1>Emploi du temps</h1>
-        <div class="card">L'emploi du temps s'affichera ici.</div>
+        <div class="card">Bienvenue dans votre emploi du temps.</div>
     </main>
 
-    <main id="page-notes" class="page-content">
-    <h1>Mes notes</h1>
-    <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <p style="color: var(--text);">Consultez vos derniers résultats scolaires.</p>
-    <button onclick="ouvrirFormulaireNote()" style="background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
-        <i class="fa-solid fa-plus"></i> Ajouter une note
-    </button>
-</div>
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="text-align: left; color: var(--text); border-bottom: 2px solid var(--border);">
-                    <th style="padding: 15px;">Matière</th>
-                    <th style="padding: 15px;">Note</th>
-                    <th style="padding: 15px;">Coefficient</th>
-                    <th style="padding: 15px;">Date</th>
-                </tr>
-            </thead>
-            <tbody id="notes-list">
-                <tr style="border-bottom: 1px solid var(--border);">
-                    <td style="padding: 15px; font-weight: 600;">Mathématiques</td>
-                    <td style="padding: 15px;"><span style="background: #eef4ff; color: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold;">15.5/20</span></td>
-                    <td style="padding: 15px;">2</td>
-                    <td style="padding: 15px; color: var(--text);">09/04/2026</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr style="background: #f8fafc; font-weight: bold;">
-                    <td style="padding: 15px;">MOYENNE GÉNÉRALE</td>
-                    <td style="padding: 15px; color: var(--primary); font-size: 1.2rem;" id="moyenne-gen">15.50</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-</main>
-    
-    <main id="page-messagerie" class="page-content">
-        <h1>Messagerie</h1>
-        <div class="card">Votre boîte de réception est vide.</div>
+    <main id="page-notes">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Mes notes</h1>
+            <button onclick="window.ouvrirFormulaireNote()" style="background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">+ Ajouter</button>
+        </div>
+        <div class="card">
+            <table>
+                <thead><tr><th>Matière</th><th>Note</th><th>Coef</th></tr></thead>
+                <tbody id="notes-list"></tbody>
+            </table>
+            <h3 style="margin-top: 20px;">Moyenne : <span id="moyenne-gen" style="color: var(--primary);">0.00</span></h3>
+        </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } 
-            window.ouvrirFormulaireNote = () => {
-    const matiere = prompt("Quelle matière ? (ex: Français)");
-    const note = parseFloat(prompt("Quelle note ? (sur 20)"));
-    const coef = parseFloat(prompt("Quel coefficient ?"));
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    if (matiere && !isNaN(note) && !isNaN(coef)) {
-        ajouterNoteTableau(matiere, note, coef);
-    }
-};
-
-function ajouterNoteTableau(matiere, note, coef) {
-    const tbody = document.getElementById('notes-list');
-    const date = new Date().toLocaleDateString();
-    
-    const row = document.createElement('tr');
-    row.style.borderBottom = "1px solid var(--border)";
-    row.innerHTML = `
-        <td style="padding: 15px; font-weight: 600;">${matiere}</td>
-        <td style="padding: 15px;"><span style="background: #eef4ff; color: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold;">${note}/20</span></td>
-        <td style="padding: 15px;">${coef}</td>
-        <td style="padding: 15px; color: var(--text);">${date}</td>
-    `;
-    
-    tbody.appendChild(row);
-    calculerMoyenne();
-}
-
-function calculerMoyenne() {
-    const tbody = document.getElementById('notes-list');
-    const rows = tbody.querySelectorAll('tr');
-    let totalPoints = 0;
-    let totalCoef = 0;
-
-    rows.forEach(row => {
-        const noteStr = row.cells[1].innerText.split('/')[0];
-        const coefStr = row.cells[2].innerText;
-        
-        const note = parseFloat(noteStr);
-        const coef = parseFloat(coefStr);
-        
-        totalPoints += (note * coef);
-        totalCoef += coef;
-    });
-
-    const moyenne = totalPoints / totalCoef;
-    document.getElementById('moyenne-gen').innerText = moyenne.toFixed(2);
-        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-}
         const firebaseConfig = {
             apiKey: "AIzaSyBVZwN2vznc3sU8frQosos4vVEgqBmrJjM",
             authDomain: "monecoledirecte.firebaseapp.com",
-            projetId: "monecoledirecte",
+            projectId: "monecoledirecte",
             storageBucket: "monecoledirecte.firebasestorage.app",
             messagingSenderId: "543788775430",
-            appId: "1:543788775430:web:4860b7498c460f78953110",
-            measurementId: "G-9QNVV0K2G9"
+            appId: "1:543788775430:web:4860b7498c460f78953110"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // NAVIGATION
-        window.showPage = (pageId, element) => {
-            // Cacher toutes les pages
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-            // Enlever l'état actif du menu
-            document.querySelectorAll('.menu li').forEach(li => li.classList.remove('active'));
-            
-            // Afficher la page demandée
-            document.getElementById(pageId).classList.add('active-page');
-            element.classList.add('active');
+        let isLoginMode = true;
+
+        // FONCTION TOGGLE (CORRIGÉE)
+        window.toggleAuth = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-title').innerText = isLoginMode ? "Connexion" : "Inscription";
+            document.getElementById('btn-auth').innerText = isLoginMode ? "Se connecter" : "Créer un compte";
+            document.getElementById('toggle-p').innerHTML = isLoginMode ? 'Pas de compte ? <span style="color:var(--primary); font-weight:bold;">S' + "inscrire ici</span>" : 'Déjà un compte ? <span style="color:var(--primary); font-weight:bold;">Se connecter</span>';
         };
 
-        // AUTHENTIFICATION
         window.handleAuth = async () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                if (error.code === 'auth/user-not-found') {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                } else { alert("Erreur: " + error.message); }
-            }
+                if(isLoginMode) await signInWithEmailAndPassword(auth, email, pass);
+                else await createUserWithEmailAndPassword(auth, email, pass);
+            } catch (e) { alert("Erreur Firebase : " + e.message); }
         };
 
         window.signOutUser = () => signOut(auth);
 
-        let isLoginMode = true;
-
-window.toggleAuth = () => {
-    isLoginMode = !isLoginMode;
-    document.querySelector('#auth-screen h2').innerText = isLoginMode ? "Connexion" : "Inscription";
-    document.getElementById('btn-auth').innerText = isLoginMode ? "Se connecter" : "Créer un compte";
-};
-        
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('sidebar').style.display = 'flex';
-                document.getElementById('user-mail').innerText = user.email;
+                document.getElementById('page-edt').classList.add('active-page');
             } else {
                 document.getElementById('auth-screen').style.display = 'flex';
                 document.getElementById('sidebar').style.display = 'none';
-                document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
-                document.getElementById('page-edt').classList.add('active-page'); // Reset
             }
         });
+
+        window.showPage = (id, el) => {
+            document.querySelectorAll('main').forEach(m => m.classList.remove('active-page'));
+            document.querySelectorAll('.menu li').forEach(li => li.classList.remove('active'));
+            document.getElementById(id).classList.add('active-page');
+            el.classList.add('active');
+        };
+
+        window.ouvrirFormulaireNote = () => {
+            const m = prompt("Matière ?");
+            const n = parseFloat(prompt("Note ?"));
+            const c = parseFloat(prompt("Coef ?"));
+            if(m && !isNaN(n)) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${m}</td><td>${n}/20</td><td>${c}</td>`;
+                document.getElementById('notes-list').appendChild(tr);
+            }
+        };
     </script>
 </body>
 </html>
